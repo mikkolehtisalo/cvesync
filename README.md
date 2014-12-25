@@ -22,6 +22,8 @@ The following prerequisities should be met:
 Cvesync can be built and installed with make:
 
 ```sh
+go get github.com/mikkolehtisalo/cvesync
+...
 make
 sudo make install
 ```
