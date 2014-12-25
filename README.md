@@ -38,6 +38,7 @@ The common options can be found from /opt/cvesync/etc/settings.json:
     "CWEfile": "/opt/cvesync/etc/cwec_v2.8.xml",
     "DBFile": "/opt/cvesync/var/cvesync.sqlite"
 }
+```
 
 The CAKeyFile points to CA Certificate chain that is used for validating the NVD's server. Before you run cvesync you should verify that it and the used URL are valid.
 
@@ -72,7 +73,7 @@ Notes
 -----
 
 * NVD recommends that the CVEs are classified with scale Low-Medium-High. Vulnerabilities with a base score in the range 7.0-10.0 are High, those in the range 4.0-6.9 as Medium, and 0-3.9 as Low.
-* CWE xml can be downloaded from http://cwe.mitre.org/data/index.html#downloads
+* CWE xml can be downloaded from http://cwe.mitre.org/data/index.html#downloads . It doesn't update very often.
 * There is an interface (*Tracker*) for implementing other issue management systems
 * Logging is done to syslog facility DAEMON. If it is not meaningful to recover, the application panics.
 * Connection to Jira is by default HTTP
