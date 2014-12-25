@@ -6,7 +6,7 @@ Introduction
 
 Accidentally disregarding known information-security vulnerabilities and exposures may lead to dire consequences. Tracking CVEs reliably requires great amount of work. Cvesync assists in previous by synchronizing new CVEs to an issue management system. After that the workflow included within issue management system can assist in the analysis, mitigation, and patching.
 
-By default cvesync reads the modified feed provided my [nvd](https://nvd.nist.gov), and updates Jira. The outcome looks something like [this](https://raw.githubusercontent.com/mikkolehtisalo/cvesync/master/jira.png).
+By default cvesync reads the modified feed provided by [nvd](https://nvd.nist.gov), and updates Jira. The outcome looks something like [this](https://raw.githubusercontent.com/mikkolehtisalo/cvesync/master/jira.png).
 
 Installation
 ------------
