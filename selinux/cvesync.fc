@@ -1,0 +1,3 @@
+/opt/cvesync(.*)                    gen_context(system_u:object_r:cvesync_t,s0)
+/opt/cvesync/var(.*)                gen_context(system_u:object_r:cvesync_rw_t,s0)
+/opt/cvesync/bin/cvesync		--	gen_context(system_u:object_r:cvesync_exec_t,s0)

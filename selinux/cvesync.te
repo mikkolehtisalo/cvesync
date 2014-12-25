@@ -1,0 +1,101 @@
+policy_module(cvesync, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+require {
+    type unconfined_t;
+    type urandom_device_t;
+    type fs_t;
+    role unconfined_r;
+    class tcp_socket create;
+    class unix_dgram_socket create;
+    class file read;
+    class dir search;
+    class chr_file read;
+}
+
+attribute_role cvesync_roles;
+roleattribute system_r cvesync_roles;
+
+type cvesync_rw_t;
+type cvesync_t;
+type cvesync_exec_t;
+application_domain(cvesync_t, cvesync_exec_t)
+role cvesync_roles types cvesync_t;
+
+permissive cvesync_t;
+
+########################################
+#
+# cvesync local policy
+#
+
+allow cvesync_t self:fifo_file manage_fifo_file_perms;
+allow cvesync_t self:unix_stream_socket create_stream_socket_perms;
+
+domain_use_interactive_fds(cvesync_t)
+files_read_etc_files(cvesync_t)
+logging_send_syslog_msg(cvesync_t)
+miscfiles_read_localization(cvesync_t)
+sysnet_dns_name_resolve(cvesync_t)
+
+# Transition to exec_t
+role unconfined_r types cvesync_exec_t;
+allow unconfined_t cvesync_exec_t:file execute;
+type_transition unconfined_t cvesync_exec_t:process cvesync_exec_t;
+allow unconfined_t cvesync_exec_t:process { siginh rlimitinh noatsecure transition };
+allow cvesync_exec_t self:file entrypoint;
+
+# Basic rights
+domain_base_type(cvesync_exec_t)
+files_list_root(cvesync_exec_t)
+unconfined_use_fds(cvesync_exec_t)
+userdom_use_inherited_user_ptys(cvesync_exec_t)
+kernel_read_unix_sysctls(cvesync_exec_t)
+init_read_pipes(cvesync_exec_t)
+virt_sandbox_domain(cvesync_exec_t)
+logging_send_syslog_msg(cvesync_exec_t)
+
+# Process control
+unconfined_sigchld(cvesync_exec_t)
+
+# Allow labeling files
+allow unconfined_t cvesync_t:dir { relabelfrom relabelto };
+allow unconfined_t cvesync_rw_t:dir { relabelfrom relabelto };
+allow unconfined_t cvesync_t:file { relabelfrom relabelto };
+allow unconfined_t cvesync_rw_t:file { relabelfrom relabelto };
+allow unconfined_t cvesync_exec_t:file { relabelfrom relabelto };
+
+# Allow unconfined users still manage files, when necessary
+allow unconfined_t cvesync_t:dir { search unlink read setattr create write getattr rmdir remove_name open add_name };
+allow unconfined_t cvesync_t:file { unlink rename setattr read lock create write getattr open append };
+allow unconfined_t cvesync_rw_t:dir { search unlink read setattr create write getattr rmdir remove_name open add_name };
+allow unconfined_t cvesync_rw_t:file { unlink rename setattr read lock create write getattr open append };
+allow unconfined_t cvesync_exec_t:file { unlink rename setattr read lock create write getattr open append };
+
+allow unconfined_t cvesync_t:dir setattr;
+
+# Allow file operations
+allow cvesync_exec_t cvesync_t:dir search;
+allow cvesync_exec_t cvesync_t:file { read getattr open };
+allow cvesync_exec_t cvesync_rw_t:dir { search unlink read create write getattr rmdir remove_name open add_name };
+allow cvesync_exec_t cvesync_rw_t:file { unlink rename setattr read lock create write getattr open append };
+allow cvesync_rw_t fs_t:filesystem associate;
+
+# Networking capabilities
+allow cvesync_exec_t self:unix_dgram_socket { create connect };
+allow cvesync_exec_t self:capability net_admin;
+allow cvesync_exec_t self:tcp_socket { setopt read write getattr getopt listen bind connect create };
+allow cvesync_exec_t self:udp_socket { getattr create connect read sendto write listen accept };
+allow cvesync_exec_t self:netlink_route_socket { create bind getattr };
+corenet_tcp_bind_generic_node(cvesync_exec_t)
+# :80, :443
+corenet_tcp_connect_http_port(cvesync_exec_t)
+# Jira is by default on :8080
+corenet_tcp_connect_http_cache_port(cvesync_exec_t)
+
+# For tls implementation
+allow cvesync_exec_t urandom_device_t:chr_file { read open };

@@ -1,0 +1,76 @@
+
+## <summary>policy for cvesync</summary>
+
+########################################
+## <summary>
+##	Execute TEMPLATE in the cvesync domin.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`cvesync_domtrans',`
+	gen_require(`
+		type cvesync_t, cvesync_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, cvesync_exec_t, cvesync_t)
+')
+
+########################################
+## <summary>
+##	Execute cvesync in the cvesync domain, and
+##	allow the specified role the cvesync domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed to transition
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	The role to be allowed the cvesync domain.
+##	</summary>
+## </param>
+#
+interface(`cvesync_run',`
+	gen_require(`
+		type cvesync_t;
+		attribute_role cvesync_roles;
+	')
+
+	cvesync_domtrans($1)
+	roleattribute $2 cvesync_roles;
+')
+
+########################################
+## <summary>
+##	Role access for cvesync
+## </summary>
+## <param name="role">
+##	<summary>
+##	Role allowed access
+##	</summary>
+## </param>
+## <param name="domain">
+##	<summary>
+##	User domain for the role
+##	</summary>
+## </param>
+#
+interface(`cvesync_role',`
+	gen_require(`
+		type cvesync_t;
+		attribute_role cvesync_roles;
+	')
+
+	roleattribute $1 cvesync_roles;
+
+	cvesync_domtrans($2)
+
+	ps_process_pattern($2, cvesync_t)
+	allow $2 cvesync_t:process { signull signal sigkill };
+')

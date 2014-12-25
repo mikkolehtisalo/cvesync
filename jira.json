@@ -1,0 +1,11 @@
+{
+    "BaseURL": "http://dev.localdomain:8080",
+    "Username": "admin",
+    "Password": "password",
+    "Project": "10000",
+    "Issuetype": "10000",
+    "TemplateFile": "/opt/cvesync/etc/jira.templ",
+    "HighPriority": "2",
+    "MediumPriority": "3",
+    "LowPriority": "4"
+}
