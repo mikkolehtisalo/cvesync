@@ -6,7 +6,7 @@ Introduction
 
 Accidentally disregarding known information-security vulnerabilities and exposures may lead to dire consequences. Tracking CVEs reliably requires great amount of work. Cvesync assists in previous by synchronizing new CVEs to an issue management system. After that the workflow included within issue management system can assist in the analysis, mitigation, and patching.
 
-By default cvesync reads the modified feed provided my [nvd|https://nvd.nist.gov], and updates Jira. 
+By default cvesync reads the modified feed provided my [nvd](https://nvd.nist.gov), and updates Jira. The outcome looks something like [this](https://raw.githubusercontent.com/mikkolehtisalo/cvesync/master/jira.png).
 
 Installation
 ------------
@@ -17,6 +17,7 @@ The following prerequisities should be met:
 * sqlite3
 * [go-sqlite3|github.com/mattn/go-sqlite3]
 * [blackjack/syslog|ithub.com/blackjack/syslog]
+* Jira
 
 Cvesync can be built and installed with make:
 
@@ -32,13 +33,13 @@ The common options can be found from /opt/cvesync/etc/settings.json:
 
 ```json
 {
-    "CAKeyFile": "/opt/cvesync/etc/ca.crt",  // CA certificate chain for the following
-    "FeedURL": "https://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-Modified.xml.gz", // Where the CVE feed is fetched from
-    "CWEfile": "/opt/cvesync/etc/cwec_v2.8.xml", // The file with CWE information, must be updated manually
-    "DBFile": "/opt/cvesync/var/cvesync.sqlite" // Database for tracking synchronization status
+    "CAKeyFile": "/opt/cvesync/etc/ca.crt",
+    "FeedURL": "https://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-Modified.xml.gz",
+    "CWEfile": "/opt/cvesync/etc/cwec_v2.8.xml",
+    "DBFile": "/opt/cvesync/var/cvesync.sqlite"
 }
 
-Before you run cvesync you should at minimum verify the CA certificate chain, and the feed url.
+The CAKeyFile points to CA Certificate chain that is used for validating the NVD's server. Before you run cvesync you should verify that it and the used URL are valid.
 
 Jira specific options can be found from /opt/cvesync/etc/jira.json:
 
@@ -49,14 +50,14 @@ Jira specific options can be found from /opt/cvesync/etc/jira.json:
     "Password": "password",
     "Project": "10000",
     "Issuetype": "10000",
-    "TemplateFile": "/opt/cvesync/etc/jira.templ", // Golang text/template for description
-    "HighPriority": "2", // For mapping to custom priorities
-    "MediumPriority": "3", // For mapping to custom priorities
-    "LowPriority": "4" // For mapping to custom priorities
+    "TemplateFile": "/opt/cvesync/etc/jira.templ", 
+    "HighPriority": "2",
+    "MediumPriority": "3",
+    "LowPriority": "4"
 }
 ```
 
-It is recommended that you create separate user, project, and issue type in Jira. Also it is recommendable to evaluate different workflows for the vulnerability issue type. Also, make sure that the description field renderer is Wiki Style Renderer instead of Default Text Renderer.
+It is recommended that you create separate user, project, priorities, and issue type in Jira. Also it is recommendable to evaluate different workflows for the vulnerability issue type. Also, make sure that the description field renderer is Wiki Style Renderer instead of Default Text Renderer.
 
 SELinux
 -------
