@@ -69,6 +69,15 @@ A simple SELinux policy is included. To install it, use make:
 sudo make selinux
 ```
 
+Running
+-------
+
+NVD's CVE feeds update at maximum once per two hours. Cvesync should most likely be run daily via cron, for example:
+
+```sh
+0 5 * * * /opt/cvesync/bin/cvesync
+```
+
 Notes
 -----
 
