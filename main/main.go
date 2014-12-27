@@ -18,7 +18,9 @@ func sync(feed nvd.CVE, cwes nvd.CWE, ts tracker.Tracker) {
 	// Initialize tracker
 	ts.Init()
 
-	for _, entry := range feed.Entries {
+	// Reverse the order as the xml feed is sorted from newest to oldest
+	for i := len(feed.Entries) - 1; i >= 0; i-- {
+		entry := feed.Entries[i]
 		entry.CWE.CWECatalog = &cwes
 		// Completely new?
 		if !util.Exists(db, entry.Id) {
