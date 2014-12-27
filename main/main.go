@@ -54,6 +54,7 @@ func main() {
 	cwes := nvd.Get_CWEs(config.CWEfile)
 
 	ts := tracker.Jira{}
+	//ts := tracker.RT{}
 	sync(cve_feed, cwes, &ts)
 
 	syslog.Info("Cvesync ended")

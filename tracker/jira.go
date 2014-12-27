@@ -118,7 +118,7 @@ func (j Jira) Add(e nvd.Entry) (string, error) {
 		return "", err
 	}
 
-	id, err := Request("POST", j.BaseURL+"/rest/api/2/issue", j.Username, j.Password, string(json))
+	id, err := jira_request("POST", j.BaseURL+"/rest/api/2/issue", j.Username, j.Password, string(json))
 	return id, err
 }
 
@@ -134,11 +134,11 @@ func (j Jira) Update(e nvd.Entry, ticketid string) error {
 		return err
 	}
 
-	_, err = Request("PUT", j.BaseURL+"/rest/api/2/issue/"+ticketid, j.Username, j.Password, string(json))
+	_, err = jira_request("PUT", j.BaseURL+"/rest/api/2/issue/"+ticketid, j.Username, j.Password, string(json))
 	return err
 }
 
-func Request(reqtype string, path string, username string, password string, jsonstr string) (string, error) {
+func jira_request(reqtype string, path string, username string, password string, jsonstr string) (string, error) {
 	client := &http.Client{}
 
 	jsonreader := strings.NewReader(jsonstr)

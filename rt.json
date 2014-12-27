@@ -1,0 +1,10 @@
+{
+    "BaseURL": "http://dev.localdomain",
+    "Username": "root",
+    "Password": "password",
+    "Queue": "3",
+    "TemplateFile": "/opt/cvesync/etc/rt.templ",
+    "HighPriority": "100",
+    "MediumPriority": "50",
+    "LowPriority": "10"
+}

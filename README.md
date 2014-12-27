@@ -6,7 +6,7 @@ Introduction
 
 Accidentally disregarding known information-security vulnerabilities and exposures may lead to dire consequences. Tracking CVEs reliably requires great amount of work. Cvesync assists in previous by synchronizing new CVEs to an issue management system. After that the workflow included within issue management system can assist in the analysis, mitigation, and patching.
 
-By default cvesync reads the modified feed provided by [nvd](https://nvd.nist.gov), and updates Jira. The outcome looks something like [this](https://raw.githubusercontent.com/mikkolehtisalo/cvesync/master/jira.png).
+By default cvesync reads the modified feed provided by [nvd](https://nvd.nist.gov), and updates to either Jira or RT. The outcome looks something like [this](https://raw.githubusercontent.com/mikkolehtisalo/cvesync/master/jira.png) or [this](https://raw.githubusercontent.com/mikkolehtisalo/cvesync/master/rt.png).
 
 Installation
 ------------
@@ -17,7 +17,7 @@ The following prerequisities should be met:
 * sqlite3
 * [go-sqlite3|github.com/mattn/go-sqlite3]
 * [blackjack/syslog|ithub.com/blackjack/syslog]
-* Jira
+* Jira or RT
 
 Cvesync can be built and installed with make:
 
@@ -44,6 +44,8 @@ The common options can be found from /opt/cvesync/etc/settings.json:
 
 The CAKeyFile points to CA Certificate chain that is used for validating the NVD's server. Before you run cvesync you should verify that it and the used URL are valid.
 
+### Jira
+
 Jira specific options can be found from /opt/cvesync/etc/jira.json:
 
 ```json
@@ -61,6 +63,34 @@ Jira specific options can be found from /opt/cvesync/etc/jira.json:
 ```
 
 It is recommended that you create separate user, project, priorities, and issue type in Jira. Also it is recommendable to evaluate different workflows for the vulnerability issue type. Also, make sure that the description field renderer is Wiki Style Renderer instead of Default Text Renderer.
+
+### RT
+
+In order to synchronize to RT, you will have to change the tracker to Jira by modifying main.go before installing the application.
+
+```go
+func main() {
+    // ...
+    //ts := tracker.Jira{}
+    ts := tracker.RT{}
+}
+```
+
+RT specific options can be found from /opt/cvesync/etc/rt.json:
+
+```json
+{
+    "BaseURL": "http://dev.localdomain",
+    "Username": "root",
+    "Password": "password",
+    "Queue": "3",
+    "TemplateFile": "/opt/cvesync/etc/rt.templ",
+    "HighPriority": "100",
+    "MediumPriority": "50",
+    "LowPriority": "10"
+}
+
+```
 
 SELinux
 -------
@@ -87,4 +117,4 @@ Notes
 * CWE xml can be downloaded from http://cwe.mitre.org/data/index.html#downloads . It doesn't update very often.
 * There is an interface (*Tracker*) for implementing other issue management systems
 * Logging is done to syslog facility DAEMON. If it is not meaningful to recover, the application panics.
-* Connection to Jira is by default HTTP
+* Connection to Jira and RT is by default HTTP

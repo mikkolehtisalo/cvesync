@@ -1,0 +1,30 @@
+SUMMARY FOR {{.Id}}
+
+{{.Summary}}
+
+Published: {{.Published}}
+Modified: {{.Last_Modified}}
+CWE: {{if .CWE.Id}}[{{.CWE.Id}}|{{.CWE.Definition_Link}}] {{.CWE.CWE_Definition}}{{else}}Unknown{{end}}
+
+CVSS INFORMATION
+
+Score: {{.CVSS.Score}}
+Access Vector: {{.CVSS.Access_Vector}}
+Access Complexity: {{.CVSS.Access_Complexity}}
+Authentication: {{.CVSS.Authentication}}
+Confidentiality Impact: {{.CVSS.Confidentiality_Impact}}
+Integrity Impact: {{.CVSS.Availability_Impact}}
+Source: {{.CVSS.Source}}
+Generated on: {{.CVSS.Generated_On}}
+
+PRODUCTS
+
+{{range .Products}}
+{{.}}
+{{end}}
+
+REFERENCES
+
+{{range .References}}
+{{.Type}}:{{.Source}} [{{.Target.Text}}|{{.Target.URL}}]
+{{end}}
