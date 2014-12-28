@@ -51,6 +51,7 @@ Jira specific options can be found from /opt/cvesync/etc/jira.json:
 ```json
 {
     "BaseURL": "http://dev.localdomain:8080",
+    "CAFile": "/opt/cvesync/etc/ca.crt",
     "Username": "admin",
     "Password": "password",
     "Project": "10000",
@@ -63,6 +64,8 @@ Jira specific options can be found from /opt/cvesync/etc/jira.json:
 ```
 
 It is recommended that you create separate user, project, priorities, and issue type in Jira. Also it is recommendable to evaluate different workflows for the vulnerability issue type. Also, make sure that the description field renderer is Wiki Style Renderer instead of Default Text Renderer.
+
+If the BaseURL starts with https, the server's certificate is checked against provided CA certificates, which should be supplied with CAFile.
 
 ### RT
 
@@ -81,6 +84,7 @@ RT specific options can be found from /opt/cvesync/etc/rt.json:
 ```json
 {
     "BaseURL": "http://dev.localdomain",
+    "CAFile": "/opt/cvesync/etc/ca.crt",
     "Username": "root",
     "Password": "password",
     "Queue": "3",
@@ -91,6 +95,8 @@ RT specific options can be found from /opt/cvesync/etc/rt.json:
 }
 
 ```
+
+If the BaseURL starts with https, the server's certificate is checked against provided CA certificates, which should be supplied with CAFile.
 
 SELinux
 -------
