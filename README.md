@@ -98,6 +98,16 @@ RT specific options can be found from /opt/cvesync/etc/rt.json:
 
 If the BaseURL starts with https, the server's certificate is checked against provided CA certificates, which should be supplied with CAFile.
 
+### Blacklisting
+
+To reduce amount of unwanted spam, it is possible to blacklist CVEs by product strings. To use this feature, just add the blacklisted strings to /opt/cvesync/etc/blacklist.txt, one per each line. For example to suppress all CVEs targeting IBM's Java SDK:
+
+```
+:ibm:java_sdk:
+```
+
+The previous would match for example "cpe:/a:ibm:java_sdk:6.0.11.0::~~technology~~", and the CVE information would not be synchronized.
+
 SELinux
 -------
 

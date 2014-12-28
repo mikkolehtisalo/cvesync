@@ -2,5 +2,6 @@
     "CAKeyFile": "/opt/cvesync/etc/ca.crt",
     "FeedURL": "https://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-Modified.xml.gz",
     "CWEfile": "/opt/cvesync/etc/cwec_v2.8.xml",
-    "DBFile": "/opt/cvesync/var/cvesync.sqlite"
+    "DBFile": "/opt/cvesync/var/cvesync.sqlite",
+    "BlackList": "/opt/cvesync/etc/blacklist.txt"
 }

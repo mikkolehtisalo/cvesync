@@ -11,6 +11,7 @@ type ServiceConfiguration struct {
 	FeedURL   string
 	CWEfile   string
 	DBFile    string
+	BlackList string
 }
 
 // Used to load the configuration from file
