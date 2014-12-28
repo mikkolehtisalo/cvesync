@@ -252,7 +252,16 @@ func (rt RT) Update(e nvd.Entry, ticketid string) error {
 
 	// Build the request
 	request := fmt.Sprintf("Queue: %v\nSubject: %v\nPriority: %v\nText:%v\n", ticket.Queue, ticket.Subject, ticket.Priority, ticket.Text)
-
 	_, err = rt_request("POST", rt.BaseURL+"/REST/1.0/ticket/"+ticketid+"/edit", rt.CAFile, jar, request)
+
+	if err != nil {
+		return err
+	}
+
+	// For some reason the RT doesn't react to Text on ticket/edit
+	// Adding the new text as comment
+	comment_request := fmt.Sprintf("id: %v\nAction: comment\nText:%v\n", ticketid, ticket.Text)
+	_, err = rt_request("POST", rt.BaseURL+"/REST/1.0/ticket/"+ticketid+"/comment", rt.CAFile, jar, comment_request)
+
 	return err
 }

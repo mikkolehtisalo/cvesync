@@ -55,6 +55,8 @@ func DB_Add(db *sql.DB, cveid string, modified time.Time, ticketid string) {
 	checkerr(err)
 }
 
+// Note that this implementation tracks only the previous modified time
+// It's okay as long as no feed contains several modifications of same CVE item
 func DB_Update(db *sql.DB, cveid string, modified time.Time) {
 	_, err := db.Exec("update status set modified=? where cveid=?", modified, cveid)
 	checkerr(err)
