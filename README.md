@@ -136,4 +136,5 @@ Notes
 * CWE xml can be downloaded from http://cwe.mitre.org/data/index.html#downloads . It doesn't update very often.
 * There is an interface (*Tracker*) for implementing other issue management systems
 * Logging is done to syslog facility DAEMON. If it is not meaningful to recover, the application panics.
+* If you need more complex logic for handling incoming CVEs you might want to take a look at [JIRA Automation Plugin](https://marketplace.atlassian.com/plugins/com.atlassian.plugin.automation.jira-automation-plugin)
 
