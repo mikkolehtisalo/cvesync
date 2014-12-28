@@ -107,7 +107,7 @@ To reduce amount of unwanted spam, it is possible to blacklist CVEs by product s
 :ibm:java_sdk:
 ```
 
-The previous would match for example "cpe:/a:ibm:java_sdk:6.0.11.0::~~technology~~", and the CVE information would not be synchronized.
+The previous would match for example "cpe:/a:ibm:java_sdk:6.0.11.0::\~\~technology\~\~", and the CVE information would not be synchronized.
 
 SELinux
 -------
