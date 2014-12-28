@@ -4,7 +4,7 @@ SUMMARY FOR {{.Id}}
 
 Published: {{.Published}}
 Modified: {{.Last_Modified}}
-CWE: {{if .CWE.Id}}[{{.CWE.Id}}|{{.CWE.Definition_Link}}] {{.CWE.CWE_Definition}}{{else}}Unknown{{end}}
+CWE: {{if .CWE.Id}}{{.CWE.Id}} {{.CWE.Definition_Link}}: {{.CWE.CWE_Definition}}{{else}}Unknown{{end}}
 
 CVSS INFORMATION
 
@@ -26,5 +26,5 @@ PRODUCTS
 REFERENCES
 
 {{range .References}}
-{{.Type}}:{{.Source}} [{{.Target.Text}}|{{.Target.URL}}]
+{{.Type}}:{{.Source}} {{.Target.Text}}: {{.Target.URL}}]
 {{end}}
