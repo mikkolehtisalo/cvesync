@@ -36,6 +36,7 @@ The common options can be found from /opt/cvesync/etc/settings.json:
 ```json
 {
     "CAKeyFile": "/opt/cvesync/etc/ca.crt",
+    "BlackList": "/opt/cvesync/etc/blacklist.txt",
     "FeedURL": "https://nvd.nist.gov/feeds/xml/cve/nvdcve-2.0-Modified.xml.gz",
     "CWEfile": "/opt/cvesync/etc/cwec_v2.8.xml",
     "DBFile": "/opt/cvesync/var/cvesync.sqlite"
