@@ -2,7 +2,6 @@ package blacklist
 
 import (
 	"bufio"
-	"fmt"
 	"github.com/blackjack/syslog"
 	"github.com/mikkolehtisalo/cvesync/nvd"
 	"os"
