@@ -2,6 +2,8 @@ package tracker
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -19,6 +21,7 @@ import (
 
 type RT struct {
 	BaseURL        string
+	CAFile         string
 	Username       string
 	Password       string
 	Queue          string
@@ -157,13 +160,30 @@ func (rt RT) Add(e nvd.Entry) (string, error) {
 	// Build the request
 	request := fmt.Sprintf("id: ticket/new\nQueue: %v\nSubject: %v\nPriority: %v\nText:%v\n", ticket.Queue, ticket.Subject, ticket.Priority, ticket.Text)
 
-	id, err := rt_request("POST", rt.BaseURL+"/REST/1.0/ticket/new", jar, request)
+	id, err := rt_request("POST", rt.BaseURL+"/REST/1.0/ticket/new", rt.CAFile, jar, request)
 	return id, err
 }
 
-func rt_request(reqtype string, path string, jar *cookiejar.Jar, ticket string) (string, error) {
-	client := &http.Client{
-		Jar: jar,
+func rt_request(reqtype string, path string, cafile string, jar *cookiejar.Jar, ticket string) (string, error) {
+	var client *http.Client
+	// If https, add CA certificate checking
+	if strings.HasPrefix(path, "https://") {
+		capool := x509.NewCertPool()
+		cacert, err := ioutil.ReadFile(cafile)
+		if err != nil {
+			syslog.Errf("Unable to read CA file: %v", err)
+			return "", err
+		}
+		capool.AppendCertsFromPEM(cacert)
+
+		// Check server certificate
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{RootCAs: capool},
+		}
+
+		client = &http.Client{Transport: tr, Jar: jar}
+	} else {
+		client = &http.Client{Jar: jar}
 	}
 
 	data := url.Values{}
@@ -233,6 +253,6 @@ func (rt RT) Update(e nvd.Entry, ticketid string) error {
 	// Build the request
 	request := fmt.Sprintf("Queue: %v\nSubject: %v\nPriority: %v\nText:%v\n", ticket.Queue, ticket.Subject, ticket.Priority, ticket.Text)
 
-	_, err = rt_request("POST", rt.BaseURL+"/REST/1.0/ticket/"+ticketid+"/edit", jar, request)
+	_, err = rt_request("POST", rt.BaseURL+"/REST/1.0/ticket/"+ticketid+"/edit", rt.CAFile, jar, request)
 	return err
 }

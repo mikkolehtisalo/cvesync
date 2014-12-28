@@ -1,5 +1,6 @@
 {
     "BaseURL": "http://dev.localdomain",
+    "CAFile": "/opt/cvesync/etc/ca.crt",
     "Username": "root",
     "Password": "password",
     "Queue": "3",

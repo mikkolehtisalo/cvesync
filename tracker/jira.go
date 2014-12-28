@@ -2,6 +2,8 @@ package tracker
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +18,7 @@ import (
 
 type Jira struct {
 	BaseURL        string
+	CAFile         string
 	Username       string
 	Password       string
 	Project        string
@@ -118,7 +121,7 @@ func (j Jira) Add(e nvd.Entry) (string, error) {
 		return "", err
 	}
 
-	id, err := jira_request("POST", j.BaseURL+"/rest/api/2/issue", j.Username, j.Password, string(json))
+	id, err := jira_request("POST", j.BaseURL+"/rest/api/2/issue", j.CAFile, j.Username, j.Password, string(json))
 	return id, err
 }
 
@@ -134,13 +137,33 @@ func (j Jira) Update(e nvd.Entry, ticketid string) error {
 		return err
 	}
 
-	_, err = jira_request("PUT", j.BaseURL+"/rest/api/2/issue/"+ticketid, j.Username, j.Password, string(json))
+	_, err = jira_request("PUT", j.BaseURL+"/rest/api/2/issue/"+ticketid, j.CAFile, j.Username, j.Password, string(json))
 	return err
 }
 
-func jira_request(reqtype string, path string, username string, password string, jsonstr string) (string, error) {
-	client := &http.Client{}
+func jira_request(reqtype string, path string, cafile string, username string, password string, jsonstr string) (string, error) {
+	var client *http.Client
+	// If https, add CA certificate checking
+	if strings.HasPrefix(path, "https://") {
+		capool := x509.NewCertPool()
+		cacert, err := ioutil.ReadFile(cafile)
+		if err != nil {
+			syslog.Errf("Unable to read CA file: %v", err)
+			return "", err
+		}
+		capool.AppendCertsFromPEM(cacert)
 
+		// Check server certificate
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{RootCAs: capool},
+		}
+
+		client = &http.Client{Transport: tr}
+	} else {
+		client = &http.Client{}
+	}
+
+	// Build request..
 	jsonreader := strings.NewReader(jsonstr)
 	req, err := http.NewRequest(reqtype, path, jsonreader)
 	if err != nil {

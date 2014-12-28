@@ -1,5 +1,6 @@
 {
     "BaseURL": "http://dev.localdomain:8080",
+    "CAFile": "/opt/cvesync/etc/ca.crt",
     "Username": "admin",
     "Password": "password",
     "Project": "10000",
